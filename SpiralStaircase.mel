@@ -1,0 +1,39 @@
+//Used chatGPT to help with the spiral part
+global proc createSpiralStaircase(int $numSteps, float $stepWidth, float $stepDepth, float $stepHeight, float $radius, float $angleStep) {
+
+    for ($i = 0; $i < $numSteps; $i++) {
+        string $step[] = `polyCube -w $stepWidth -h $stepHeight -d $stepDepth`;
+        string $stepName = $step[0]; // The name of the cube is the first element in the array
+
+        // Calculate the angle and height for the current step
+        float $angle = $i * $angleStep;
+        float $height = $i * $stepHeight;
+
+        // Convert angle to radians
+        float $radians = $angle * 3.141592653589793 / 180;
+
+        // Calculate the x and z positions using trigonometry
+        float $xPos = $radius * cos($radians);
+        float $zPos = $radius * sin($radians);
+
+        // Move the step to its correct position in the spiral
+        move -a $xPos ($height + 1) $zPos;
+        
+        float $rotationAngle = $angle + 90; // Adjust rotation angle to face the direction of the spiral
+        rotate -a 0 (-1 * $rotationAngle) 0;
+
+
+    }
+    polyCylinder -radius 5 -height ($numSteps * $stepHeight);
+    move -relative -y (($numSteps * $stepHeight)/2);
+}
+
+int $numSteps = 25;            // Number of steps
+float $stepWidth = 5.0;        // Width of each step
+float $stepDepth = 10.0;       // Depth of each step
+float $stepHeight = 3.0;       // Height of each step
+float $radius = 10.0;          // Radius of the spiral
+float $angleStep = 15.0;       // Angle between each step in degrees
+
+createSpiralStaircase($numSteps, $stepWidth, $stepDepth, $stepHeight, $radius, $angleStep);
+
