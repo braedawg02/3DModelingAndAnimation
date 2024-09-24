@@ -3,16 +3,18 @@ global proc createSpiralStaircase(int $numSteps, float $stepWidth, float $stepDe
 
     for ($i = 0; $i < $numSteps; $i++) {
         string $step[] = `polyCube -w $stepWidth -h $stepHeight -d $stepDepth`;
-        string $stepName = $step[0]; // The name of the cube is the first element in the array
+        string $stepName = $step[0]; 
 
-        // Calculate the angle and height for the current step
+        // Calculate the angle and height for the step we're iterating over (I.e, 1st step, 2nd step, etc)
         float $angle = $i * $angleStep;
         float $height = $i * $stepHeight;
 
-        // Convert angle to radians
+        // Convert angle to radians, since maya uses radians for trig stuff
+
         float $radians = $angle * 3.141592653589793 / 180;
 
-        // Calculate the x and z positions using trigonometry
+        // Calculate the x and z positions using trigonometry, this lets us find a point on the circle at the given angle
+        //look up cos/sin gif to see how it works :)
         float $xPos = $radius * cos($radians);
         float $zPos = $radius * sin($radians);
 

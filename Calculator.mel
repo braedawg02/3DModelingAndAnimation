@@ -1,0 +1,31 @@
+global proc Calculator($input[], $operation){
+    if($operation = "add"){
+
+    }
+
+    else if($operation = "subtract"){
+
+    } 
+    else if ($operation = "multiply"){
+
+    }
+    else if ($operation = "divide"){
+
+    }
+    else if ($operation = "power"){
+
+    }
+    else if ($operation = "mean"){
+
+    }
+    else if ($operation = "average"){
+
+    }
+    else if ($operation = "mode"){
+
+    }
+}
+
+
+
+

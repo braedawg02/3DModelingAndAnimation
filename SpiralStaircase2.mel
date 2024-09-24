@@ -1,0 +1,38 @@
+global proc createSpiralStaircase(int $numSteps, float $stairLength, float $stairWidth, float $stairHeight, float $pivotOffset, float $stepHeight, float $stepRotation) {
+
+    for ($i = 0; $i < $numSteps; $i++) {
+        string $step[] = `polyCube -w $stairWidth -h $stairHeight -d $stairLength`;
+        string $stepName = $step[0]; 
+
+        // Calculate the angle and height for the current step
+        float $angle = $i * $stepRotation;
+        float $height = $i * $stepHeight;
+
+        // Convert angle to radians, since maya uses radians for trig stuff (ALSO DEGREES AREN'T REAL)
+        float $radians = $angle * 3.141592653589793 / 180;
+
+        // Calculate the x and z positions for our pivot point using trigonometry, this lets us find a point on the circle at the given angle
+        //look up cos/sin gif to see how it works :)        
+        float $xPos = $pivotOffset * cos($radians);
+        float $zPos = $pivotOffset * sin($radians);
+
+        // Move the step to its correct position in the spiral
+        move -a $xPos ($height + 1) $zPos;
+        
+        float $rotationAngle = $angle + 90; // Adjust rotation angle to face the direction of the spiral
+        rotate -a 0 (-1 * $rotationAngle) 0;
+    }
+    polyCylinder -radius ($pivotOffset-$stairWidth) -height ($numSteps * $stepHeight);
+    move -relative -y (($numSteps * $stepHeight)/2);
+}
+
+int $numSteps = 25;             
+float $stairLength = 10.0;      
+float $stairWidth = 2;       
+float $stairHeight = 1;       
+float $pivotOffset = 5;     
+float $stepHeight = 2;       
+float $stepRotation = 15.0;     
+
+createSpiralStaircase($numSteps, $stairLength, $stairWidth, $stairHeight, $pivotOffset, $stepHeight, $stepRotation);
+
