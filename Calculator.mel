@@ -1,5 +1,3 @@
-
-
 global proc float add(float $input[]) {
     float $result = 0;
     for ($i = 0; $i < size($input); $i++) {
@@ -31,6 +29,7 @@ global proc float divide(float $input[]) {
     }
     return $result;
 }
+
 global proc float power(float $input[]) {
     float $result = $input[0];
     for ($i = 1; $i < size($input); $i++) {
@@ -71,34 +70,59 @@ global proc float median(float $input[]) {
     return $result;
 }
 
-
-global proc Calculator(float $input[], string $operation) {
+global proc float Calculator(float $input[], string $operation) {
     float $result;
+    string $operationString;
     switch ($operation) {
         case "add":
             $result = add($input);
+            $operationString = " + ";
             break;
         case "subtract":
             $result = subtract($input);
+            $operationString = " - ";
             break;
         case "multiply":
             $result = multiply($input);
+            $operationString = " * ";
             break;
         case "divide":
             $result = divide($input);
+            $operationString = " / ";
             break;
         case "power":
             $result = power($input);
+            $operationString = " ^ ";
             break;
         case "mean":
             $result = mean($input);
+            $operationString = " mean ";
             break;
         case "median":
             $result = median($input);
+            $operationString = " median ";
             break;
         default:
             error("That's not an operation");
-            return;
+            return 0;
     }
-    print("Result: " + $result);  print("Result: " + $result);
+
+    string $inputString = "";
+    for ($i = 0; $i < size($input); $i++) {
+        $inputString += $input[$i];
+        if ($i < size($input) - 1) {
+            $inputString += ", ";
+        }
+    }
+
+    if ($operation == "mean" || $operation == "median") {
+        print("The " + $operation + " of " + $inputString + " is " + $result + "\n");
+    } else {
+        print($inputString + $operationString + "= " + $result + "\n");
+    }
+
+    return $result;
 }
+float $nums[] = {4.0, 3.0, 8.0, 9.8, 2.5};
+string $operation = "mean";
+Calculator($nums, $operation);
