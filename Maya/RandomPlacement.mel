@@ -1,0 +1,16 @@
+global proc RandomPlacement(float $xmin, float $xmax, float $zmin, float $zmax, float $ymin, float $ymax, int $numDups)
+{
+    string $sels[] = `ls -selection`;
+    for(int $i=0; $i<size($sels); $i++){
+        for(int $j=0; $j<$numDups; $j++){
+            string $dup[] = `duplicate $sels[$i]`;
+            float $x = rand($xmin, $xmax);
+            float $y = rand($ymin, $ymax);
+            float $z = rand($zmin, $zmax);
+            xform -t $x $y $z $dup[0];
+        }
+    }
+}
+
+// Example usage:
+// RandomPlacement(-10, 10, -10, 10, 0, 20, 5);
