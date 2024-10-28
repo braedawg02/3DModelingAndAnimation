@@ -1,8 +1,10 @@
 global proc RandomPlacement(float $xmin, float $xmax, float $zmin, float $zmax, float $ymin, float $ymax, int $numDups)
 {
     string $sels[] = `ls -selection`;
-    for(int $i=0; $i<size($sels); $i++){
-        for(int $j=0; $j<$numDups; $j++){
+    int $i;
+    int $j;
+    for($i=0; $i<size($sels); $i++){
+        for($j=0; $j<$numDups; $j++){
             string $dup[] = `duplicate $sels[$i]`;
             float $x = rand($xmin, $xmax);
             float $y = rand($ymin, $ymax);
@@ -12,5 +14,40 @@ global proc RandomPlacement(float $xmin, float $xmax, float $zmin, float $zmax, 
     }
 }
 
-// Example usage:
-// RandomPlacement(-10, 10, -10, 10, 0, 20, 5);
+global proc RandomPlacementUI()
+{
+    if (`window -exists randomPlacementWin`)
+    {
+        deleteUI randomPlacementWin;
+    }
+    
+    window -title "Random Placement" -widthHeight 300 200 randomPlacementWin;
+    columnLayout -adjustableColumn true;
+    
+    floatFieldGrp -label "X Min" -value1 0.0 xMinField;
+    floatFieldGrp -label "X Max" -value1 10.0 xMaxField;
+    floatFieldGrp -label "Y Min" -value1 0.0 yMinField;
+    floatFieldGrp -label "Y Max" -value1 10.0 yMaxField;
+    floatFieldGrp -label "Z Min" -value1 0.0 zMinField;
+    floatFieldGrp -label "Z Max" -value1 10.0 zMaxField;
+    intFieldGrp -label "Number of Duplicates" -value1 5 numDupsField;
+    
+    button -label "Apply" -command "applyRandomPlacement()";
+    
+    showWindow randomPlacementWin;
+}
+
+global proc applyRandomPlacement()
+{
+    float $xmin = `floatFieldGrp -q -value1 xMinField`;
+    float $xmax = `floatFieldGrp -q -value1 xMaxField`;
+    float $ymin = `floatFieldGrp -q -value1 yMinField`;
+    float $ymax = `floatFieldGrp -q -value1 yMaxField`;
+    float $zmin = `floatFieldGrp -q -value1 zMinField`;
+    float $zmax = `floatFieldGrp -q -value1 zMaxField`;
+    int $numDups = `intFieldGrp -q -value1 numDupsField`;
+    
+    RandomPlacement($xmin, $xmax, $zmin, $zmax, $ymin, $ymax, $numDups);
+}
+
+RandomPlacementUI();

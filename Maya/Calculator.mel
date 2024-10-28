@@ -1,3 +1,6 @@
+global string $inputField;
+global string $operationMenu;
+global string $resultField;
 global proc float add(float $input[]) {
     float $result = 0;
     for ($i = 0; $i < size($input); $i++) {
@@ -123,6 +126,67 @@ global proc float Calculator(float $input[], string $operation) {
 
     return $result;
 }
-float $nums[] = {4.0, 3.0, 8.0, 9.8, 2.5};
-string $operation = "mean";
-Calculator($nums, $operation);
+
+global proc createCalculatorUI() {
+    // Declare global variables to be used inside the procedure
+    global string $inputField;
+    global string $operationMenu;
+    global string $resultField;
+    
+    if (`window -exists calculatorWindow`) {
+        deleteUI calculatorWindow;
+    }
+    
+    window -title "Braedawg's Calculator" -widthHeight 300 200 calculatorWindow;
+    columnLayout -adjustableColumn true;
+    
+    text -label "Enter numbers (separated by a comma):";
+    // Store the control name in a variable
+    $inputField = `textField -w 200 -text ""`;
+    
+    text -label "Select operation:";
+    // Store the control name in a variable
+    $operationMenu = `optionMenu`;
+        menuItem -label "add";
+        menuItem -label "subtract";
+        menuItem -label "multiply";
+        menuItem -label "divide";
+        menuItem -label "power";
+        menuItem -label "mean";
+        menuItem -label "median";
+    
+    button -label "Calculate" -command "performCalculation()";
+    
+    text -label "Result:";
+    // Store the control name in a variable
+    $resultField = `textField -editable false`;
+    
+    showWindow calculatorWindow;
+}
+
+
+global proc performCalculation() {
+    // Declare global variables to access the control names
+    global string $inputField;
+    global string $operationMenu;
+    global string $resultField;
+    
+    // Query the text field and option menu using the stored control names
+    string $inputString = `textField -q -text $inputField`;
+    string $operation = `optionMenu -q -value $operationMenu`;
+    
+    // Process the input string
+    string $inputArray[] = stringToStringArray($inputString, ",");
+    float $input[];
+    for ($i = 0; $i < size($inputArray); $i++) {
+        $input[$i] = float($inputArray[$i]);
+    }
+    
+    // Calculate the result
+    float $result = Calculator($input, $operation);
+    
+    // Update the result field
+    textField -edit -text (string($result)) $resultField;
+}
+
+createCalculatorUI();
