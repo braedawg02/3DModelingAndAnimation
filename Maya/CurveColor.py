@@ -1,5 +1,30 @@
 import maya.cmds as cmds
 
+class CurveColorUI:
+    def __init__(self):
+        self.window = "CurveColorWindow"
+        self.title = "Curve Color"
+        self.size = (300, 100)
+        self.color_field = None
+
+    def create(self):
+        if cmds.window(self.window, exists=True):
+            cmds.deleteUI(self.window, window=True)
+
+        self.window = cmds.window(self.window, title=self.title, widthHeight=self.size)
+        self.layout = cmds.columnLayout(adjustableColumn=True)
+
+        cmds.text(label="Enter desired color:")
+        self.color_field = cmds.textField()
+
+        cmds.button(label="apply color", command=self.change_shape_node_color)
+        cmds.showWindow(self.window)  
+
+    def change_shape_node_color(self, *args):
+        color = cmds.textField(self.color_field, query=True, text=True)
+        change_shape_node_color(color)
+
+
 def change_shape_node_color(color):
     """
     Changes the color of the shape nodes of selected objects in Maya.
@@ -47,6 +72,9 @@ def change_shape_node_color(color):
             modified_count += 1
 
     if modified_count > 0:
-        cmds.inform("Changed color of {} shape nodes.".format(modified_count))
+        cmds.confirmDialog(title='Success', message=f'Changed color of {modified_count} shape nodes.')
     else:
-        cmds.inform("No shape nodes were modified.")
+        cmds.confirmDialog(title='Info', message='No shape nodes were modified.')
+
+Curve_Color_ui = CurveColorUI()
+Curve_Color_ui.create()
